@@ -16,12 +16,14 @@ namespace Talycap.Repositories.Repositories
         public async Task<ClienteDto?> ObtenerPorIdentificacionAsync(
             string identificacion)
         {
-            var cliente = await _context.Clientes
+            var clientes = await _context.Clientes
                 .FromSqlRaw(
                     "EXEC sp_ObtenerCliente @Identificacion = {0}",
                     identificacion)
                 .AsNoTracking()
-                .FirstOrDefaultAsync();
+                .ToListAsync();
+
+            var cliente = clientes.FirstOrDefault();
 
             if (cliente == null)
                 return null;
